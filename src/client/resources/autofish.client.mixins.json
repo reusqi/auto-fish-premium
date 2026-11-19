@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "com.adith.autofish.client.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"LocalPlayerMixin",
+		"SoundSystemMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

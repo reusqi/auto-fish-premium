@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "autofish",
+	"version": "${version}",
+	"name": "Auto Fish Premium",
+	"description": "A premium client-side utility featuring acoustic splash detection, a humanized anti-cheat bypass scheduler, emergency durability protection, and automated hotbar food consumption.",
+	"authors": [
+		"Reusqi"
+	],
+	"contact": {
+		"homepage": "https://github.com/yourusername/auto-fish-premium",
+		"sources": "https://github.com/yourusername/auto-fish-premium"
+	},
+	"license": "MIT",
+	"icon": "assets/autofish/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.adith.autofish.AutoFishPremium"
+		],
+		"client": [
+			"com.adith.autofish.client.AutoFishPremiumClient"
+		]
+	},
+	"mixins": [
+		"autofish.mixins.json",
+		{
+			"config": "autofish.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}

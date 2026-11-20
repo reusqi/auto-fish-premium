@@ -56,8 +56,6 @@ public class AutoFishConfigScreen extends Screen {
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        this.extractTransparentBackground(graphics);
-
         int panelWidth = Math.min(400, this.width - 24);
         int panelHeight = 260;
         int left = (this.width - panelWidth) / 2;

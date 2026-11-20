@@ -2,11 +2,12 @@ package com.adith.autofish.client;
 
 import com.adith.autofish.AutoFishManager;
 import com.adith.autofish.client.gui.AutoFishConfigScreen;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
-import org.lwjgl.glfw.GLFW;
+import net.minecraft.client.Minecraft;
 
 public class AutoFishPremiumClient implements ClientModInitializer {
 	private static KeyMapping toggleKey;
@@ -14,14 +15,16 @@ public class AutoFishPremiumClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		toggleKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+		toggleKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 				"key.autofish.toggle",
-				GLFW.GLFW_KEY_H,
+				InputConstants.Type.KEYBOARD,
+				InputConstants.KEY_H,
 				KeyMapping.Category.GAMEPLAY
 		));
-		configKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+		configKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 				"key.autofish.config",
-				GLFW.GLFW_KEY_J,
+				InputConstants.Type.KEYBOARD,
+				InputConstants.KEY_J,
 				KeyMapping.Category.GAMEPLAY
 		));
 
@@ -31,7 +34,7 @@ public class AutoFishPremiumClient implements ClientModInitializer {
 			}
 
 			while (configKey.consumeClick()) {
-				client.setScreen(new AutoFishConfigScreen(client.screen));
+				client.gui.setScreen(new AutoFishConfigScreen(client.gui.screen()));
 			}
 		});
 	}

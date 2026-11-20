@@ -2,7 +2,7 @@ package com.adith.autofish.client.gui;
 
 import com.adith.autofish.AutoFishManager;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -23,11 +23,31 @@ public class AutoFishConfigScreen extends Screen {
         int x = left + 20;
         int y = Math.max(58, this.height / 2 - 96);
 
-        addToggleButton(x, y, buttonWidth, "Auto-Fish", AutoFishManager.isEnabled(), AutoFishManager::setEnabled);
-        addToggleButton(x, y + 28, buttonWidth, "Durability Protection", AutoFishManager.isDurabilityProtectionEnabled(), AutoFishManager::setDurabilityProtectionEnabled);
-        addToggleButton(x, y + 56, buttonWidth, "Auto-Eat", AutoFishManager.isAutoEatEnabled(), AutoFishManager::setAutoEatEnabled);
-        addToggleButton(x, y + 84, buttonWidth, "HUD Notifications", AutoFishManager.isNotificationsEnabled(), AutoFishManager::setNotificationsEnabled);
-        addToggleButton(x, y + 112, buttonWidth, "Random Recast Delay", AutoFishManager.isRandomRecastDelayEnabled(), AutoFishManager::setRandomRecastDelayEnabled);
+        addRenderableWidget(Button.builder(toggleLabel("Auto-Fish", AutoFishManager.isEnabled()), button -> {
+            boolean next = !AutoFishManager.isEnabled();
+            AutoFishManager.setEnabled(next);
+            button.setMessage(toggleLabel("Auto-Fish", next));
+        }).bounds(x, y, buttonWidth, 22).build());
+        addRenderableWidget(Button.builder(toggleLabel("Durability Protection", AutoFishManager.isDurabilityProtectionEnabled()), button -> {
+            boolean next = !AutoFishManager.isDurabilityProtectionEnabled();
+            AutoFishManager.setDurabilityProtectionEnabled(next);
+            button.setMessage(toggleLabel("Durability Protection", next));
+        }).bounds(x, y + 28, buttonWidth, 22).build());
+        addRenderableWidget(Button.builder(toggleLabel("Auto-Eat", AutoFishManager.isAutoEatEnabled()), button -> {
+            boolean next = !AutoFishManager.isAutoEatEnabled();
+            AutoFishManager.setAutoEatEnabled(next);
+            button.setMessage(toggleLabel("Auto-Eat", next));
+        }).bounds(x, y + 56, buttonWidth, 22).build());
+        addRenderableWidget(Button.builder(toggleLabel("HUD Notifications", AutoFishManager.isNotificationsEnabled()), button -> {
+            boolean next = !AutoFishManager.isNotificationsEnabled();
+            AutoFishManager.setNotificationsEnabled(next);
+            button.setMessage(toggleLabel("HUD Notifications", next));
+        }).bounds(x, y + 84, buttonWidth, 22).build());
+        addRenderableWidget(Button.builder(toggleLabel("Random Recast Delay", AutoFishManager.isRandomRecastDelayEnabled()), button -> {
+            boolean next = !AutoFishManager.isRandomRecastDelayEnabled();
+            AutoFishManager.setRandomRecastDelayEnabled(next);
+            button.setMessage(toggleLabel("Random Recast Delay", next));
+        }).bounds(x, y + 112, buttonWidth, 22).build());
 
         this.addRenderableWidget(Button.builder(Component.literal("Done"), button -> this.onClose())
                 .bounds(x, y + 152, buttonWidth, 24)
@@ -35,8 +55,8 @@ public class AutoFishConfigScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderTransparentBackground(graphics);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        this.extractTransparentBackground(graphics);
 
         int panelWidth = Math.min(400, this.width - 24);
         int panelHeight = 260;
@@ -49,18 +69,18 @@ public class AutoFishConfigScreen extends Screen {
         graphics.fill(left, top, right, top + 3, 0xFF3DDC97);
         graphics.fill(left, top + 3, right, top + 4, 0xFF4CA3FF);
 
-        graphics.drawCenteredString(this.font, Component.literal("Auto Fish Premium").withStyle(ChatFormatting.AQUA), this.width / 2, top + 14, 0xFFFFFFFF);
-        graphics.drawCenteredString(this.font, Component.literal("H toggles fishing  |  J opens this panel").withStyle(ChatFormatting.GRAY), this.width / 2, top + 31, 0xFFB8C7D9);
-        graphics.drawString(this.font, Component.literal("Rod shutoff at " + AutoFishManager.getLowDurabilityLimit() + " durability").withStyle(ChatFormatting.YELLOW), left + 22, bottom - 42, 0xFFFFE08A);
-        graphics.drawString(this.font, Component.literal("Auto-eat starts at " + AutoFishManager.getEatHungerThreshold() + " hunger or lower").withStyle(ChatFormatting.YELLOW), left + 22, bottom - 28, 0xFFFFE08A);
+        graphics.centeredText(this.font, Component.literal("Auto Fish Premium").withStyle(ChatFormatting.AQUA), this.width / 2, top + 14, 0xFFFFFFFF);
+        graphics.centeredText(this.font, Component.literal("H toggles fishing  |  J opens this panel").withStyle(ChatFormatting.GRAY), this.width / 2, top + 31, 0xFFB8C7D9);
+        graphics.text(this.font, Component.literal("Rod shutoff at " + AutoFishManager.getLowDurabilityLimit() + " durability").withStyle(ChatFormatting.YELLOW), left + 22, bottom - 42, 0xFFFFE08A);
+        graphics.text(this.font, Component.literal("Auto-eat starts at " + AutoFishManager.getEatHungerThreshold() + " hunger or lower").withStyle(ChatFormatting.YELLOW), left + 22, bottom - 28, 0xFFFFE08A);
 
-        super.render(graphics, mouseX, mouseY, partialTick);
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
     }
 
     @Override
     public void onClose() {
         if (this.minecraft != null) {
-            this.minecraft.setScreen(parent);
+            this.minecraft.gui.setScreen(parent);
         }
     }
 
@@ -69,32 +89,8 @@ public class AutoFishConfigScreen extends Screen {
         return false;
     }
 
-    private void addToggleButton(int x, int y, int width, String label, boolean initialValue, ToggleSetter setter) {
-        this.addRenderableWidget(Button.builder(toggleLabel(label, initialValue), button -> {
-            boolean next = !currentValue(label);
-            setter.set(next);
-            button.setMessage(toggleLabel(label, next));
-        }).bounds(x, y, width, 22).build());
-    }
-
-    private boolean currentValue(String label) {
-        return switch (label) {
-            case "Auto-Fish" -> AutoFishManager.isEnabled();
-            case "Durability Protection" -> AutoFishManager.isDurabilityProtectionEnabled();
-            case "Auto-Eat" -> AutoFishManager.isAutoEatEnabled();
-            case "HUD Notifications" -> AutoFishManager.isNotificationsEnabled();
-            case "Random Recast Delay" -> AutoFishManager.isRandomRecastDelayEnabled();
-            default -> false;
-        };
-    }
-
     private Component toggleLabel(String label, boolean value) {
         return Component.literal(label + ": " + (value ? "ON" : "OFF"))
                 .withStyle(value ? ChatFormatting.GREEN : ChatFormatting.RED);
-    }
-
-    @FunctionalInterface
-    private interface ToggleSetter {
-        void set(boolean value);
     }
 }

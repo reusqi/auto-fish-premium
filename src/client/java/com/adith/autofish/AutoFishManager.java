@@ -2,8 +2,6 @@ package com.adith.autofish;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.Overlay;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -263,35 +261,7 @@ public class AutoFishManager {
 
     private static void showActionBar(Component message) {
         Minecraft client = Minecraft.getInstance();
-        if (!notificationsEnabled || client.gui == null) return;
-        client.gui.setOverlay(new MessageOverlay(client, message));
-    }
-
-    private static class MessageOverlay extends Overlay {
-        private final Minecraft client;
-        private final Component message;
-        private int ticksRemaining = 40;
-
-        MessageOverlay(Minecraft client, Component message) {
-            this.client = client;
-            this.message = message;
-        }
-
-        @Override
-        public void tick() {
-            if (--ticksRemaining <= 0 && client.gui.overlay() == this) {
-                client.gui.setOverlay(null);
-            }
-        }
-
-        @Override
-        public boolean isPausing() {
-            return false;
-        }
-
-        @Override
-        public void extractRenderState(GuiGraphicsExtractor graphics, int screenWidth, int screenHeight, float partialTick) {
-            graphics.centeredText(client.font, message, screenWidth / 2, screenHeight / 3, 0xFFFFFF);
-        }
+        if (!notificationsEnabled || client.gui == null || client.player == null) return;
+        client.player.sendOverlayMessage(message);
     }
 }

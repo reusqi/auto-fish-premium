@@ -3,7 +3,7 @@
 	"id": "autofish",
 	"version": "${version}",
 	"name": "Auto Fish Premium",
-	"description": "A premium client-side utility featuring acoustic splash detection, a humanized anti-cheat bypass scheduler, emergency durability protection, and automated hotbar food consumption.",
+	"description": "A premium client-side utility featuring splash detection, a humanized anti-cheat bypass scheduler, emergency durability protection, and automated hotbar food consumption.",
 	"authors": [
 		"Reusqi"
 	],
